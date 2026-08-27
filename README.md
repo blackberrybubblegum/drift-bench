@@ -55,6 +55,14 @@ Then the model is frozen and the test inputs are corrupted. Nothing is retrained
 | scale | 1.7× (June sensor ratio) | 1.698 | 0.007 |
 | scale | 2.2× (August sensor ratio) | 2.950 | 0.000 |
 
+![Forecast error against severity, one panel per failure mode](figures/august_degradation.png)
+
+*Error as each failure mode is turned up. Blue is the GRU, orange the persistence baseline. Dropout is flat, noise separates the two models, scaling takes both straight up.*
+
+![Coverage of the 90% prediction interval against severity](figures/august_conformal.png)
+
+*Coverage of the 90% interval, dashed line at the promise. It holds under dropout and noise and falls through the floor under scaling.*
+
 The two sensors disagree differently depending on the channel. Temperature is a fixed offset of about 3 °C and it holds in both rooms, six weeks apart. PM2.5 isn't fixed at all. The SEN55 reads 1.71 times the Atmocube in June and 2.21 times in August, and the gap grows with concentration.
 
 The interval width is 1.134 in every row of that table, including the rows where it never contains the truth. Nothing widens. Nothing warns.
