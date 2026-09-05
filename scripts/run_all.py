@@ -48,6 +48,8 @@ def main() -> None:
         noise = agreement.noise_floor(df, channels, seconds)
         print(noise.round(4).to_string(index=False))
         print()
+        print(agreement.ratio_summary(df, channels).round(3).to_string(index=False))
+        print()
         print(gaps.summarise(df, "pm_2_5", seconds).round(3).to_string(index=False))
         print(f"simultaneous share: {gaps.simultaneous_share(df, 'pm_2_5', seconds):.3f}")
 

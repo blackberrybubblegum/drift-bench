@@ -53,6 +53,26 @@ def summarise(df: pd.DataFrame, channels: list[str]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def ratio_summary(df: pd.DataFrame, channels: list[str]) -> pd.DataFrame:
+    """Estimate the SEN55-to-Atmocube gain four ways, which agree only when there is no offset."""
+    rows = []
+    for channel in channels:
+        paired = channel_difference(df, channel)
+        nonzero = paired[paired["atmo"] != 0]
+        slope, intercept = np.polyfit(nonzero["atmo"], nonzero["sen55"], 1)
+        ratios = nonzero["sen55"] / nonzero["atmo"]
+        rows.append(
+            {
+                "channel": channel,
+                "ratio_of_means": paired["sen55"].mean() / paired["atmo"].mean(),
+                "median_of_ratios": ratios.median(),
+                "ols_slope": float(slope),
+                "ols_intercept": float(intercept),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def plot_difference_over_time(df: pd.DataFrame, channel: str, path: str) -> None:
     """Save a time series of the sensor difference with its fitted trend."""
     paired = channel_difference(df, channel)
